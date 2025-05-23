@@ -1,15 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ApiUrl } from '../constants';
+import { User } from '../models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5000/api/auth/login';
+  private apiUrl = `${ApiUrl.BASE_URL}/auth/login`;
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    // Initialize currentUser from localStorage if available
+    const user = this.getUser();
+    if (user && Object.keys(user).length > 0) {
+      this.currentUserSubject.next(user);
+    }
+  }
 
   login(email: string, password: string): Observable<any> {
     return this.http.post(this.apiUrl, { email, password }).pipe(
@@ -17,6 +27,7 @@ export class AuthService {
         // Store user data and token in localStorage
         localStorage.setItem('user', JSON.stringify(response));
         localStorage.setItem('token', response.token);
+        this.currentUserSubject.next(response);
         return response;
       })
     );
@@ -29,9 +40,11 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    this.currentUserSubject.next(null);
   }
 
-  getUser(): any {
-    return JSON.parse(localStorage.getItem('user') || '{}');
+  getUser(): User | null {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
   }
 }

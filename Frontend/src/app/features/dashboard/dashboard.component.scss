@@ -1,0 +1,192 @@
+.dashboard-container {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+
+  h1 {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 700;
+    color: #1f2937;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.5rem;
+
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .stat-card {
+      background-color: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      border-radius: 0.5rem;
+
+      .card-content {
+        padding: 1rem 1rem;
+
+        @media (min-width: 640px) {
+          padding: 1.5rem;
+        }
+
+        dt {
+          font-size: 1rem;
+          line-height: 1.5rem;
+          font-weight: 400;
+          color: #1f2937;
+        }
+
+        dd {
+          margin-top: 0.25rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+
+          @media (min-width: 768px) {
+            display: block;
+          }
+
+          @media (min-width: 1024px) {
+            display: flex;
+          }
+
+          .stat-value {
+            display: flex;
+            align-items: baseline;
+            font-size: 1.5rem;
+            line-height: 2rem;
+            font-weight: 600;
+          }
+
+          .text-blue-600 {
+            color: #2563eb;
+          }
+
+          .text-green-600 {
+            color: #059669;
+          }
+
+          .text-yellow-600 {
+            color: #d97706;
+          }
+
+          .text-purple-600 {
+            color: #7c3aed;
+          }
+        }
+      }
+    }
+  }
+
+  .recent-activity {
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border-radius: 0.5rem;
+
+    .activity-content {
+      padding: 1rem 1rem;
+
+      @media (min-width: 640px) {
+        padding: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+        font-weight: 500;
+        color: #1f2937;
+      }
+
+      .activity-list {
+        margin-top: 1rem;
+        overflow: hidden;
+
+        ul {
+          margin-bottom: -2rem;
+
+          li {
+            .activity-item {
+              position: relative;
+              padding-bottom: 2rem;
+
+              .connector-line {
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+                bottom: 0;
+                width: 0.125rem;
+                background-color: #d1d5db;
+                margin-left: -0.0625rem;
+              }
+
+              .activity-details {
+                position: relative;
+                display: flex;
+                margin-left: 0.75rem;
+
+                .icon-container {
+                  height: 2rem;
+                  width: 2rem;
+                  border-radius: 9999px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  box-shadow: 0 0 0 8px #ffffff;
+                }
+
+                .bg-blue-100 {
+                  background-color: #dbeafe;
+                }
+                .bg-green-100 {
+                  background-color: #d1fae5;
+                }
+                .bg-yellow-100 {
+                  background-color: #fef9c3;
+                }
+
+                .text-blue-500 {
+                  color: #3b82f6;
+                }
+                .text-green-500 {
+                  color: #22c55e;
+                }
+                .text-yellow-500 {
+                  color: #f59e0b;
+                }
+
+                .content-container {
+                  min-width: 0;
+                  flex: 1 1 0%;
+                  padding-top: 0.375rem;
+                  display: flex;
+                  justify-content: space-between;
+                  margin-left: 1rem;
+
+                  p {
+                    font-size: 0.875rem;
+                    line-height: 1.25rem;
+                    color: #6b7280;
+                  }
+
+                  .timestamp {
+                    text-align: right;
+                    font-size: 0.875rem;
+                    line-height: 1.25rem;
+                    white-space: nowrap;
+                    color: #6b7280;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

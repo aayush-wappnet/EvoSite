@@ -1,0 +1,40 @@
+<nav class="sidebar-nav">
+  <!-- Logo -->
+  <div class="logo-container">
+    <!-- Removed EvoSite title -->
+  </div>
+
+  <!-- Navigation Items -->
+  <div class="nav-items">
+    <ul>
+      <li *ngFor="let item of navItems">
+        <a [routerLink]="item.route"
+           routerLinkActive="active">
+          <i [class]="item.icon"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- User Info -->
+  <div class="user-info">
+    <div class="user-details">
+      <div class="avatar-placeholder"></div>
+      <div class="user-text">
+        <p>User Name</p>
+        <p>Role</p>
+      </div>
+    </div>
+    <div class="profile-logout">
+      <a routerLink="/profile">
+        <i class="fas fa-user-circle"></i>
+        <span>Profile</span>
+      </a>
+      <a (click)="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </div>
+</nav> 

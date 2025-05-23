@@ -1,0 +1,28 @@
+<div class="main-layout-container">
+  <!-- Sidebar -->
+  <app-sidebar class="sidebar-container"></app-sidebar>
+  
+  <!-- Main Content -->
+  <div class="main-content-area">
+    <!-- Top Navigation -->
+    <header class="top-navigation">
+      <div class="navbar-content">
+        <h1 class="site-title">EvoSite</h1>
+        <div class="user-actions">
+          <span class="welcome-text">Welcome, User</span>
+          <button>
+            <i class="fas fa-bell"></i>
+          </button>
+          <button>
+            <i class="fas fa-user"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div> 
