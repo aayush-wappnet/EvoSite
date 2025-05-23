@@ -7,15 +7,9 @@
     <!-- Top Navigation -->
     <header class="top-navigation">
       <div class="navbar-content">
-        <h1 class="site-title">EvoSite</h1>
+        <h1 class="site-title"> Construction Project and Contractor Management-System</h1>
         <div class="user-actions">
-          <span class="welcome-text">Welcome, User</span>
-          <button>
-            <i class="fas fa-bell"></i>
-          </button>
-          <button>
-            <i class="fas fa-user"></i>
-          </button>
+          <span class="welcome-text">Welcome, {{ currentUser?.name || 'Guest' }}</span>
         </div>
       </div>
     </header>

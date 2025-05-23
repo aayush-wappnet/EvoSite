@@ -1,13 +1,13 @@
 <nav class="sidebar-nav">
   <!-- Logo -->
   <div class="logo-container">
-    <!-- Removed EvoSite title -->
+    <h2 class=""><i class="fas fa-building"></i> EvoSite</h2>
   </div>
 
   <!-- Navigation Items -->
   <div class="nav-items">
     <ul>
-      <li *ngFor="let item of navItems">
+      <li *ngFor="let item of filteredNavItems">
         <a [routerLink]="item.route"
            routerLinkActive="active">
           <i [class]="item.icon"></i>
@@ -22,8 +22,8 @@
     <div class="user-details">
       <div class="avatar-placeholder"></div>
       <div class="user-text">
-        <p>User Name</p>
-        <p>Role</p>
+        <!-- <p>{{ currentUser?.name }}</p> -->
+        <p>{{ currentUser?.role }}</p>
       </div>
     </div>
     <div class="profile-logout">

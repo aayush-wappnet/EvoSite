@@ -7,7 +7,7 @@
   padding: 0;
 
   .logo-container {
-    padding: 1rem;
+    margin: 10px;
     border-bottom: 1px solid #34495e; /* Slightly lighter border */
     text-align: center;
 
@@ -15,6 +15,15 @@
       font-size: 1.5rem;
       font-weight: 600;
       color: #ecf0f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+
+      i {
+        font-size: 1.4rem;
+        color: #3498db; /* Blue color for the icon */
+      }
     }
   }
 
@@ -88,15 +97,20 @@
       .user-text {
         flex-grow: 1;
 
-        p:first-child {
+        // p:first-child {
+        //   font-size: 0.9rem;
+        //   font-weight: 500;
+        //   color: #ecf0f1;
+        // }
+
+        p:last-child {
+
           font-size: 0.9rem;
           font-weight: 500;
           color: #ecf0f1;
-        }
 
-        p:last-child {
-          font-size: 0.8rem;
-          color: #bdc3c7; /* Lighter gray for role */
+          // font-size: 0.8rem;
+          // color: #bdc3c7; /* Lighter gray for role */
         }
       }
     }

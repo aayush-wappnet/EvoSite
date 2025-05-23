@@ -1,28 +1,69 @@
 <div class="login-container">
-  <div class="login-box">
-    <h2>Login</h2>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div class="login-card">
+    <div class="login-header">
+      <i class="fas fa-building"></i>
+      <h1>EvoSite</h1>
+      <p>Welcome back! Please login to your account.</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" formControlName="email" class="form-control" />
-        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
-          <small *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</small>
-          <small *ngIf="loginForm.get('email')?.errors?.['email']">Invalid email format</small>
+        <label for="email">
+          <i class="fas fa-envelope"></i>
+          Email
+        </label>
+        <div class="input-container">
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email" 
+            placeholder="Enter your email"
+            [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+          >
+        </div>
+        <div class="error-message" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          <i class="fas fa-exclamation-circle"></i>
+          Please enter a valid email address
         </div>
       </div>
 
       <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" formControlName="password" class="form-control" />
-        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
-          <small *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</small>
-          <small *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</small>
+        <label for="password">
+          <i class="fas fa-lock"></i>
+          Password
+        </label>
+        <div class="input-container">
+          <input 
+            [type]="showPassword ? 'text' : 'password'"
+            id="password" 
+            formControlName="password" 
+            placeholder="Enter your password"
+            [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+          >
+          <button 
+            type="button" 
+            class="toggle-password" 
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+          >
+            <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+          </button>
+        </div>
+        <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          <i class="fas fa-exclamation-circle"></i>
+          Password must be at least 6 characters
         </div>
       </div>
 
-      <div *ngIf="error" class="error-message">{{error}}</div>
+      <div class="error-message" *ngIf="error">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ error }}
+      </div>
 
-      <button type="submit" [disabled]="loginForm.invalid" class="btn btn-primary">Login</button>
+      <button type="submit" class="login-button" [disabled]="loginForm.invalid">
+        <i class="fas fa-sign-in-alt"></i>
+        Login
+      </button>
     </form>
   </div>
 </div>

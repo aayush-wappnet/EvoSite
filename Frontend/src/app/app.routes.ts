@@ -20,12 +20,25 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: [Role.ADMIN, Role.CONTRACTOR, Role.SITE_ENGINEER, Role.CLIENT] }
       },
-      // {
-      //   path: 'users',
-      //   loadComponent: () => import('./features/users/users.component').then(m => m.UsersComponent),
-      //   canActivate: [RoleGuard],
-      //   data: { roles: [Role.ADMIN] }
-      // },
+      {
+        path: 'users',
+        canActivate: [RoleGuard],
+        data: { roles: [Role.ADMIN] },
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./features/admin/users/user-list/user-list.component').then(m => m.UserListComponent)
+          },
+          {
+            path: 'create',
+            loadComponent: () => import('./features/admin/users/user-form/user-form.component').then(m => m.UserFormComponent)
+          },
+          {
+            path: 'edit/:id',
+            loadComponent: () => import('./features/admin/users/user-form/user-form.component').then(m => m.UserFormComponent)
+          }
+        ]
+      },
       // {
       //   path: 'projects',
       //   loadComponent: () => import('./features/projects/projects.component').then(m => m.ProjectsComponent),
