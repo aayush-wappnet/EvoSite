@@ -1,0 +1,121 @@
+<div class="project-form">
+  <h1 class="project-form__title">
+    <i class="fas fa-project-diagram"></i>
+    {{ isEditMode ? 'Edit Project' : 'Create Project' }}
+  </h1>
+
+  <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="project-form__container">
+    <div class="form-group">
+      <label class="form-group__label" for="name">
+        <i class="fas fa-folder"></i>
+        Project Name
+      </label>
+      <input
+        id="name"
+        type="text"
+        formControlName="name"
+        class="form-group__input"
+        [class.form-group__input--error]="projectForm.get('name')?.invalid && projectForm.get('name')?.touched"
+      >
+      <div *ngIf="projectForm.get('name')?.invalid && projectForm.get('name')?.touched" class="form-group__error">
+        <i class="fas fa-exclamation-circle"></i>
+        Project name is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-group__label" for="description">
+        <i class="fas fa-align-left"></i>
+        Description
+      </label>
+      <textarea
+        id="description"
+        formControlName="description"
+        rows="4"
+        class="form-group__input"
+        [class.form-group__input--error]="projectForm.get('description')?.invalid && projectForm.get('description')?.touched"
+      ></textarea>
+      <div *ngIf="projectForm.get('description')?.invalid && projectForm.get('description')?.touched" class="form-group__error">
+        <i class="fas fa-exclamation-circle"></i>
+        Description is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-group__label" for="startDate">
+        <i class="fas fa-calendar-alt"></i>
+        Start Date
+      </label>
+      <input
+        id="startDate"
+        type="date"
+        formControlName="startDate"
+        class="form-group__input"
+        [class.form-group__input--error]="projectForm.get('startDate')?.invalid && projectForm.get('startDate')?.touched"
+      >
+      <div *ngIf="projectForm.get('startDate')?.invalid && projectForm.get('startDate')?.touched" class="form-group__error">
+        <i class="fas fa-exclamation-circle"></i>
+        Start date is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-group__label" for="endDate">
+        <i class="fas fa-calendar-check"></i>
+        End Date
+      </label>
+      <input
+        id="endDate"
+        type="date"
+        formControlName="endDate"
+        class="form-group__input"
+        [class.form-group__input--error]="projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched"
+      >
+      <div *ngIf="projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched" class="form-group__error">
+        <i class="fas fa-exclamation-circle"></i>
+        End date is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-group__label" for="status">
+        <i class="fas fa-info-circle"></i>
+        Status
+      </label>
+      <select
+        id="status"
+        formControlName="status"
+        class="form-group__input"
+        [class.form-group__input--error]="projectForm.get('status')?.invalid && projectForm.get('status')?.touched"
+      >
+        <option *ngFor="let status of projectStatuses" [value]="status">
+          {{ status }}
+        </option>
+      </select>
+      <div *ngIf="projectForm.get('status')?.invalid && projectForm.get('status')?.touched" class="form-group__error">
+        <i class="fas fa-exclamation-circle"></i>
+        Status is required
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="submit"
+        [disabled]="projectForm.invalid"
+        class="form-actions__submit"
+        [class.form-actions__submit--disabled]="projectForm.invalid"
+      >
+        <i class="fas" [class.fa-save]="isEditMode" [class.fa-plus]="!isEditMode"></i>
+        {{ isEditMode ? 'Update' : 'Create' }}
+      </button>
+      <button
+        type="button"
+        (click)="onCancel()"
+        class="form-actions__cancel"
+      >
+        <i class="fas fa-times"></i>
+        Cancel
+      </button>
+    </div>
+  </form>
+</div> 

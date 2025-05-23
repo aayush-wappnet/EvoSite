@@ -8,7 +8,6 @@ export interface Vendor {
   phone: string;
   createdAt: Date;
   updatedAt: Date;
-  materials?: Material[];
 }
 
 export interface CreateVendorDto {

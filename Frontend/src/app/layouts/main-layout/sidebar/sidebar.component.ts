@@ -64,6 +64,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
       icon: 'fas fa-file-invoice',
       route: '/invoices',
       roles: [Role.ADMIN, Role.CONTRACTOR]
+    },
+    {
+      label: 'Vendors',
+      icon: 'fas fa-truck',
+      route: '/vendors',
+      roles: [Role.ADMIN]
     }
   ];
 

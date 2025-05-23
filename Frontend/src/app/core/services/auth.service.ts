@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ApiUrl } from '../constants';
-import { User } from '../models';
+import { ApiUrl } from '../constants/api-url';
+import { User } from '../models/user.model';
+import { Role } from '../constants/role.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -46,5 +47,10 @@ export class AuthService {
   getUser(): User | null {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
+  }
+
+  hasRole(role: Role): boolean {
+    const user = this.getUser();
+    return user?.role === role;
   }
 }

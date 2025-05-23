@@ -1,0 +1,52 @@
+<div class="project-list">
+  <div class="project-list__header">
+    <h1 class="project-list__title">
+      <i class="fas fa-project-diagram"></i>
+      Projects
+    </h1>
+    <button 
+      *ngIf="hasAdminAccess"
+      routerLink="/projects/create" 
+      class="project-list__create-btn"
+    >
+      <i class="fas fa-plus"></i>
+      Create Project
+    </button>
+  </div>
+
+  <div class="project-list__grid">
+    <div *ngFor="let project of projects" class="project-card">
+      <h2 class="project-card__title">
+        <i class="fas fa-folder"></i>
+        {{ project.name }}
+      </h2>
+      <p class="project-card__description">
+        <i class="fas fa-align-left"></i>
+        {{ project.description }}
+      </p>
+      <div class="project-card__dates">
+        <span class="project-card__date">
+          <i class="fas fa-calendar-alt"></i>
+          Start: {{ project.startDate | date:'mediumDate' }}
+        </span>
+        <span class="project-card__date">
+          <i class="fas fa-calendar-check"></i>
+          End: {{ project.endDate | date:'mediumDate' }}
+        </span>
+      </div>
+      <div class="project-card__footer">
+        <span class="project-card__status">
+          <i class="fas fa-info-circle"></i>
+          Status: {{ project.status }}
+        </span>
+        <button 
+          [routerLink]="['/projects', project.id]"
+          class="project-card__view-btn"
+        >
+          <i class="fas fa-eye"></i>
+          View Details
+        </button>
+      </div>
+    </div>
+  </div>
+</div> 

@@ -8,10 +8,10 @@ import { Invoice } from './invoice.model';
 export interface Project {
   id: string;
   name: string;
-  description: string;
-  startDate: Date;
-  endDate: Date;
+  description?: string;
   status: ProjectStatus;
+  startDate?: Date;
+  endDate?: Date;
   createdAt: Date;
   updatedAt: Date;
   users?: User[];
