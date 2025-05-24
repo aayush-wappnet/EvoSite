@@ -59,6 +59,25 @@ export const routes: Routes = [
         ]
       },
       {
+        path: 'sites',
+        canActivate: [RoleGuard],
+        data: { roles: [Role.ADMIN, Role.CONTRACTOR, Role.SITE_ENGINEER] },
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./features/sites/site-list/site-list.component').then(m => m.SiteListComponent)
+          },
+          {
+            path: 'create',
+            loadComponent: () => import('./features/sites/site-form/site-form.component').then(m => m.SiteFormComponent)
+          },
+          {
+            path: 'edit/:id',
+            loadComponent: () => import('./features/sites/site-form/site-form.component').then(m => m.SiteFormComponent)
+          }
+        ]
+      },
+      {
         path: 'vendors',
         canActivate: [RoleGuard],
         data: { roles: [Role.ADMIN] },

@@ -42,6 +42,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
       roles: [Role.ADMIN, Role.CONTRACTOR, Role.SITE_ENGINEER]
     },
     {
+      label: 'Sites',
+      icon: 'fas fa-building',
+      route: '/sites',
+      roles: [Role.ADMIN, Role.CONTRACTOR, Role.SITE_ENGINEER]
+    },
+    {
       label: 'Tasks',
       icon: 'fas fa-tasks',
       route: '/tasks',

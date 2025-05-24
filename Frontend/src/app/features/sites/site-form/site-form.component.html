@@ -1,0 +1,84 @@
+<div class="site-form">
+  <h2>
+    <i class="fas fa-building"></i>
+    {{ isEditMode ? 'Edit Site' : 'Create Site' }}
+  </h2>
+
+  <div *ngIf="loading" class="loading-spinner">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <i class="fas fa-exclamation-circle"></i>
+    {{ error }}
+  </div>
+
+  <form [formGroup]="siteForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+    <div class="form-group">
+      <label for="name">
+        <i class="fas fa-tag"></i>
+        Site Name
+      </label>
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        placeholder="Enter site name"
+        [class.is-invalid]="siteForm.get('name')?.invalid && siteForm.get('name')?.touched"
+      />
+      <div class="error-message" *ngIf="siteForm.get('name')?.invalid && siteForm.get('name')?.touched">
+        <span *ngIf="siteForm.get('name')?.errors?.['required']">Site name is required</span>
+        <span *ngIf="siteForm.get('name')?.errors?.['minlength']">Site name must be at least 3 characters</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="location">
+        <i class="fas fa-map-marker-alt"></i>
+        Location
+      </label>
+      <input
+        type="text"
+        id="location"
+        formControlName="location"
+        placeholder="Enter site location"
+        [class.is-invalid]="siteForm.get('location')?.invalid && siteForm.get('location')?.touched"
+      />
+      <div class="error-message" *ngIf="siteForm.get('location')?.invalid && siteForm.get('location')?.touched">
+        <span *ngIf="siteForm.get('location')?.errors?.['required']">Location is required</span>
+      </div>
+    </div>
+
+    <!-- Project Selection (only in create mode) -->
+    <div class="form-group" *ngIf="!isEditMode">
+      <label for="projectId">
+        <i class="fas fa-project-diagram"></i>
+        Project
+      </label>
+      <select
+        id="projectId"
+        formControlName="projectId"
+        [class.is-invalid]="siteForm.get('projectId')?.invalid && siteForm.get('projectId')?.touched"
+      >
+        <option value="">Select a project</option>
+        <option *ngFor="let project of projects" [value]="project.id">
+          {{ project.name }}
+        </option>
+      </select>
+      <div class="error-message" *ngIf="siteForm.get('projectId')?.invalid && siteForm.get('projectId')?.touched">
+        <span *ngIf="siteForm.get('projectId')?.errors?.['required']">Project selection is required</span>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">
+        <i class="fas fa-times"></i>
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary" [disabled]="siteForm.invalid">
+        <i class="fas fa-save"></i>
+        {{ isEditMode ? 'Update Site' : 'Create Site' }}
+      </button>
+    </div>
+  </form>
+</div> 

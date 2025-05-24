@@ -1,0 +1,85 @@
+<div class="site-list">
+  <div class="site-list__header">
+    <h2>
+      <i class="fas fa-building"></i>
+      Sites
+    </h2>
+    <button class="btn btn-primary" (click)="onCreateSite()">
+      <i class="fas fa-plus"></i>
+      Create Site
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-spinner">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <i class="fas fa-exclamation-circle"></i>
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error" class="site-list__grid">
+    <div *ngFor="let site of sites" class="site-card">
+      <div class="site-card__header">
+        <h3>{{ site.name }}</h3>
+        <div class="site-card__actions">
+          <button class="btn btn-icon" (click)="onEditSite(site)" title="Edit Site">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn btn-icon" (click)="onDeleteSite(site)" title="Delete Site">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      <div class="site-card__content">
+        <p><i class="fas fa-map-marker-alt"></i> {{ site.location }}</p>
+        
+        <!-- Project Details -->
+        <div class="project-details" *ngIf="site.project">
+          <h4><i class="fas fa-project-diagram"></i> Project Details</h4>
+          <p><strong>Name:</strong> {{ site.project.name }}</p>
+          <p><strong>Description:</strong> {{ site.project.description }}</p>
+          <p><strong>Status:</strong> {{ site.project.status }}</p>
+          <p><strong>Start Date:</strong> {{ site.project.startDate | date }}</p>
+          <p><strong>End Date:</strong> {{ site.project.endDate | date }}</p>
+        </div>
+        <div *ngIf="!site.project && site.projectId" class="loading-project">
+          <i class="fas fa-spinner fa-spin"></i> Loading project details...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !error && sites.length === 0" class="empty-state">
+    <i class="fas fa-building"></i>
+    <p>No sites found</p>
+    <button class="btn btn-primary" (click)="onCreateSite()">
+      <i class="fas fa-plus"></i>
+      Create Your First Site
+    </button>
+  </div>
+
+  <!-- Delete Confirmation Dialog -->
+  <div *ngIf="showDeleteDialog" class="dialog-overlay">
+    <div class="dialog">
+      <div class="dialog__header">
+        <h3>Confirm Delete</h3>
+        <button class="btn btn-icon" (click)="closeDeleteDialog()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="dialog__content">
+        <p>Are you sure you want to delete site "{{ siteToDelete?.name }}"?</p>
+        <p class="warning">This action cannot be undone.</p>
+      </div>
+      <div class="dialog__actions">
+        <button class="btn btn-secondary" (click)="closeDeleteDialog()">Cancel</button>
+        <button class="btn btn-danger" (click)="confirmDelete()">
+          <i class="fas fa-trash"></i>
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div> 
