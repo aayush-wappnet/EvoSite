@@ -34,6 +34,33 @@ export class UserController {
     return users.map(user => this.mapToResponseDto(user));
   }
 
+  @Get('contractors')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Get all contractors' })
+  @ApiResponse({ status: 200, description: 'Return all contractors', type: [UserResponseDto] })
+  async findAllContractors(): Promise<UserResponseDto[]> {
+    const contractors = await this.userService.findAllContractors();
+    return contractors.map(contractor => this.mapToResponseDto(contractor));
+  }
+
+  @Get('clients')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Get all clients' })
+  @ApiResponse({ status: 200, description: 'Return all clients', type: [UserResponseDto] })
+  async findAllClients(): Promise<UserResponseDto[]> {
+    const clients = await this.userService.findAllClients();
+    return clients.map(client => this.mapToResponseDto(client));
+  }
+
+  @Get('site-engineers')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Get all site engineers' })
+  @ApiResponse({ status: 200, description: 'Return all site engineers', type: [UserResponseDto] })
+  async findAllSiteEngineers(): Promise<UserResponseDto[]> {
+    const siteEngineers = await this.userService.findAllSiteEngineers();
+    return siteEngineers.map(engineer => this.mapToResponseDto(engineer));
+  }
+
   @Get(':id')
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Get a user by ID' })

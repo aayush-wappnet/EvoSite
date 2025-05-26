@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Role } from '../common/enums/role.enum';
 
 @Injectable()
 export class UserService {
@@ -76,5 +77,17 @@ export class UserService {
   async remove(id: string): Promise<void> {
     const user = await this.findOne(id);
     await this.userRepository.remove(user);
+  }
+
+  async findAllContractors(): Promise<User[]> {
+    return this.userRepository.find({ where: { role: Role.CONTRACTOR } });
+  }
+
+  async findAllClients(): Promise<User[]> {
+    return this.userRepository.find({ where: { role: Role.CLIENT } });
+  }
+
+  async findAllSiteEngineers(): Promise<User[]> {
+    return this.userRepository.find({ where: { role: Role.SITE_ENGINEER } });
   }
 }
