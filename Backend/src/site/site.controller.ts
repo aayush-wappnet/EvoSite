@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SiteService } from './site.service';
 import { CreateSiteDto } from './dto/create-site.dto';
@@ -25,10 +25,10 @@ export class SiteController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all sites' })
+  @ApiOperation({ summary: 'Get all sites as per user role' })
   @ApiResponse({ status: 200, description: 'Return all sites', type: [SiteResponseDto] })
-  async findAll(): Promise<SiteResponseDto[]> {
-    return this.siteService.findAll();
+  async findAll(@Request() req): Promise<SiteResponseDto[]> {
+    return this.siteService.findAll(req.user);
   }
 
   @Get(':id')

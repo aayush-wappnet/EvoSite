@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { Site } from './entities/site.entity';
 import { CreateSiteDto } from './dto/create-site.dto';
 import { UpdateSiteDto } from './dto/update-site.dto';
+import { User } from '../user/entities/user.entity';
+import { Role } from '../common/enums/role.enum';
 
 @Injectable()
 export class SiteService {
@@ -17,8 +19,19 @@ export class SiteService {
     return this.siteRepository.save(site);
   }
 
-  async findAll(): Promise<Site[]> {
-    return this.siteRepository.find();
+  async findAll(user: User): Promise<Site[]> {
+    // If user is admin, return all sites
+    if (user.role === Role.ADMIN) {
+      return this.siteRepository.find();
+    }
+
+    // For other roles, return sites from projects where the user is assigned
+    return this.siteRepository
+      .createQueryBuilder('site')
+      .leftJoinAndSelect('site.project', 'project')
+      .leftJoinAndSelect('project.users', 'user')
+      .where('user.id = :userId', { userId: user.id })
+      .getMany();
   }
 
   async findOne(id: string): Promise<Site> {
