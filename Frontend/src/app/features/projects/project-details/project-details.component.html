@@ -1,0 +1,144 @@
+<div class="project-details">
+  <div class="project-details__header">
+    <button routerLink="/projects" class="back-button">
+      <i class="fas fa-arrow-left"></i> Back to Projects
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <i class="fas fa-spinner fa-spin"></i> Loading project details...
+  </div>
+
+  <div *ngIf="error" class="error">
+    <i class="fas fa-exclamation-circle"></i> {{ error }}
+  </div>
+
+  <div *ngIf="project && !loading" class="project-details__content">
+    <div class="project-details__main">
+      <h1 class="project-details__title">
+        <i class="fas fa-project-diagram"></i>
+        {{ project.name }}
+      </h1>
+      
+      <div class="project-details__info">
+        <div class="info-section">
+          <h2><i class="fas fa-info-circle"></i> Project Information</h2>
+          <p class="description">{{ project.description }}</p>
+          <div class="dates">
+            <span><i class="fas fa-calendar-alt"></i> Start Date: {{ project.startDate | date:'mediumDate' }}</span>
+            <span><i class="fas fa-calendar-check"></i> End Date: {{ project.endDate | date:'mediumDate' }}</span>
+          </div>
+          <span class="status" [class]="'status--' + project.status.toLowerCase()">
+            <i class="fas fa-circle"></i> {{ project.status }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-details__sections">
+      <div class="section">
+        <div class="section__header">
+          <h2><i class="fas fa-users"></i> Team Members</h2>
+          <div class="section__actions" *ngIf="hasAdminAccess">
+            <button class="action-button" (click)="openAssignModal(Role.CONTRACTOR)">
+              <i class="fas fa-plus"></i> Add Contractor
+            </button>
+            <button class="action-button" (click)="openAssignModal(Role.CLIENT)">
+              <i class="fas fa-plus"></i> Add Client
+            </button>
+            <button class="action-button" (click)="openAssignModal(Role.SITE_ENGINEER)">
+              <i class="fas fa-plus"></i> Add Site Engineer
+            </button>
+          </div>
+        </div>
+        <div class="users-grid">
+          <div *ngFor="let user of project.users" class="user-card">
+            <div class="user-card__info">
+              <h3>{{ user.name }}</h3>
+              <p><i class="fas fa-envelope"></i> {{ user.email }}</p>
+              <span class="role" [class]="'role--' + user.role.toLowerCase()">
+                {{ user.role }}
+              </span>
+            </div>
+            <button *ngIf="hasAdminAccess" 
+                    class="remove-button" 
+                    (click)="confirmRemoveUser(user)"
+                    title="Remove user">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2><i class="fas fa-map-marker-alt"></i> Project Sites</h2>
+        <div class="sites-grid">
+          <div *ngFor="let site of project.sites" class="site-card">
+            <h3>{{ site.name }}</h3>
+            <p><i class="fas fa-map-pin"></i> {{ site.location }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assign User Modal -->
+  <div class="modal" *ngIf="showAssignModal">
+    <div class="modal__content">
+      <div class="modal__header">
+        <h2>Assign {{ selectedRole }}</h2>
+        <button class="modal__close" (click)="closeAssignModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal__body">
+        <div *ngIf="loadingUsers" class="loading">
+          <i class="fas fa-spinner fa-spin"></i> Loading users...
+        </div>
+        
+        <div *ngIf="!loadingUsers && availableUsers.length === 0" class="no-users">
+          No available {{ selectedRole?.toLowerCase() }}s to assign
+        </div>
+        
+        <div *ngIf="!loadingUsers && availableUsers.length > 0" class="users-list">
+          <div *ngFor="let user of availableUsers" class="user-item">
+            <div class="user-item__info">
+              <h3>{{ user.name }}</h3>
+              <p>{{ user.email }}</p>
+            </div>
+            <button class="assign-button" (click)="assignUser(user.id)">
+              <i class="fas fa-plus"></i> Assign
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Dialog -->
+  <div class="modal" *ngIf="showConfirmDialog">
+    <div class="modal__content">
+      <div class="modal__header">
+        <h2>Confirm Removal</h2>
+        <button class="modal__close" (click)="cancelRemoveUser()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal__body">
+        <p class="confirmation-message">
+          Are you sure you want to remove <strong>{{ userToRemove?.name }}</strong> from this project?
+        </p>
+        <div class="confirmation-actions">
+          <button class="cancel-button" (click)="cancelRemoveUser()">
+            Cancel
+          </button>
+          <button class="confirm-button" (click)="removeUser()">
+            Remove User
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

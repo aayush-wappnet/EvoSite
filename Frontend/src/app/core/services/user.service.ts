@@ -25,6 +25,18 @@ export class UserService {
     return this.http.get<User>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
 
+  getContractors(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/contractors`, { headers: this.getHeaders() });
+  }
+
+  getClients(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/clients`, { headers: this.getHeaders() });
+  }
+
+  getSiteEngineers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/site-engineers`, { headers: this.getHeaders() });
+  }
+
   createUser(user: Partial<User>): Observable<User> {
     return this.http.post<User>(this.apiUrl, user, { headers: this.getHeaders() });
   }
