@@ -6,6 +6,7 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
+import { Role } from '../common/enums/role.enum';
 
 @Injectable()
 export class ProjectService {
@@ -20,8 +21,18 @@ export class ProjectService {
     return this.projectRepository.save(project);
   }
 
-  async findAll(): Promise<Project[]> {
-    return this.projectRepository.find();
+  async findAll(user: User): Promise<Project[]> {
+    // If user is admin, return all projects
+    if (user.role === Role.ADMIN) {
+      return this.projectRepository.find();
+    }
+
+    // For other roles, return only projects where the user is assigned
+    return this.projectRepository
+      .createQueryBuilder('project')
+      .leftJoinAndSelect('project.users', 'user')
+      .where('user.id = :userId', { userId: user.id })
+      .getMany();
   }
 
   async findOne(id: string): Promise<Project> {

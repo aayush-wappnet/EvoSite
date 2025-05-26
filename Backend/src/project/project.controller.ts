@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
@@ -26,10 +26,10 @@ export class ProjectController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all projects' })
+  @ApiOperation({ summary: 'Get all projects as per user role' })
   @ApiResponse({ status: 200, description: 'Return all projects', type: [ProjectResponseDto] })
-  async findAll(): Promise<ProjectResponseDto[]> {
-    return this.projectService.findAll();
+  async findAll(@Request() req): Promise<ProjectResponseDto[]> {
+    return this.projectService.findAll(req.user);
   }
 
   @Get(':id')
