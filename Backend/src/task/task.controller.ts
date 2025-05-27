@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -28,10 +28,10 @@ export class TaskController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all tasks' })
+  @ApiOperation({ summary: 'Get all tasks as per user role' })
   @ApiResponse({ status: 200, description: 'Return all tasks', type: [TaskResponseDto] })
-  async findAll(): Promise<TaskResponseDto[]> {
-    return this.taskService.findAll();
+  async findAll(@Request() req): Promise<TaskResponseDto[]> {
+    return this.taskService.findAll(req.user);
   }
 
   @Get(':id')

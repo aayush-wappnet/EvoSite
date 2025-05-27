@@ -8,6 +8,8 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { CreateTaskDependencyDto } from './dto/create-task-dependency.dto';
 import { SiteService } from '../site/site.service';
 import { UserService } from '../user/user.service';
+import { User } from '../user/entities/user.entity';
+import { Role } from '../common/enums/role.enum';
 
 @Injectable()
 export class TaskService {
@@ -32,14 +34,39 @@ export class TaskService {
     return this.taskRepository.save(task);
   }
 
-  async findAll(): Promise<Task[]> {
-    return this.taskRepository.find();
+  async findAll(user: User): Promise<Task[]> {
+    // If user is admin, return all tasks
+    if (user.role === Role.ADMIN) {
+      return this.taskRepository.find({
+        relations: ['users', 'site', 'site.project'],
+      });
+    }
+
+    // For site engineers, return only tasks they are assigned to
+    if (user.role === Role.SITE_ENGINEER) {
+      return this.taskRepository
+        .createQueryBuilder('task')
+        .leftJoinAndSelect('task.users', 'user')
+        .leftJoinAndSelect('task.site', 'site')
+        .leftJoinAndSelect('site.project', 'project')
+        .where('user.id = :userId', { userId: user.id })
+        .getMany();
+    }
+
+    // For other roles, return tasks from projects they are assigned to
+    return this.taskRepository
+      .createQueryBuilder('task')
+      .leftJoinAndSelect('task.site', 'site')
+      .leftJoinAndSelect('site.project', 'project')
+      .leftJoinAndSelect('project.users', 'user')
+      .where('user.id = :userId', { userId: user.id })
+      .getMany();
   }
 
   async findOne(id: string): Promise<Task> {
     const task = await this.taskRepository.findOne({
       where: { id },
-      relations: ['users'],
+      relations: ['users', 'site', 'site.project'],
     });
     
     if (!task) {
