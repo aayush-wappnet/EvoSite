@@ -1,135 +1,230 @@
 <div class="dashboard-container">
-  <h1>Dashboard</h1>
-  
-  <!-- Stats Grid -->
-  <div class="stats-grid">
-    <!-- Total Projects Card -->
-    <div class="stat-card">
-      <div class="card-content">
-        <dt>Total Projects</dt>
-        <dd>
-          <div class="stat-value text-blue-600">
-            12
-            <!-- You can add a trend indicator here if needed -->
+  <div class="dashboard-header">
+    <h1><i class="fas fa-chart-line"></i> Dashboard</h1>
+    <div class="tab-buttons">
+      <button 
+        [class.active]="activeTab === 'stats'" 
+        (click)="switchTab('stats')"
+        class="tab-button">
+        <i class="fas fa-chart-bar"></i> Statistics
+      </button>
+      <button 
+        [class.active]="activeTab === 'gantt'" 
+        (click)="switchTab('gantt')"
+        class="tab-button">
+        <i class="fas fa-project-diagram"></i> Gantt Chart
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <i class="fas fa-spinner fa-spin"></i> Loading dashboard data...
+  </div>
+
+  <div *ngIf="error" class="error">
+    <i class="fas fa-exclamation-circle"></i> {{ error }}
+  </div>
+
+  <!-- Statistics Tab -->
+  <div *ngIf="!loading && !error && stats && activeTab === 'stats'" class="stats-container">
+    <!-- Admin Dashboard -->
+    <div *ngIf="role === 'Admin'" class="admin-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-users"></i></div>
+          <h3>Total Users</h3>
+          <p class="stat-value">{{ stats.totalUsers }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
+          <h3>Total Projects</h3>
+          <p class="stat-value">{{ stats.totalProjects }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+          <h3>Total Tasks</h3>
+          <p class="stat-value">{{ stats.totalTasks }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-boxes"></i></div>
+          <h3>Total Materials</h3>
+          <p class="stat-value">{{ stats.totalMaterials }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-truck"></i></div>
+          <h3>Total Vendors</h3>
+          <p class="stat-value">{{ stats.totalVendors }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+          <h3>Total Documents</h3>
+          <p class="stat-value">{{ stats.totalDocuments }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+          <h3>Total Invoices</h3>
+          <p class="stat-value">{{ stats.totalInvoices }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+          <h3>Total Payments</h3>
+          <p class="stat-value">{{ stats.totalPayments }}</p>
+        </div>
+      </div>
+
+      <!-- User Distribution -->
+      <div class="distribution-section">
+        <h3>User Distribution</h3>
+        <div class="distribution-grid">
+          <div class="distribution-item" *ngFor="let role of getStatusDistributionKeys(stats.userDistribution)">
+            <div class="distribution-icon">
+              <i [class]="getRoleIcon(role)"></i>
+            </div>
+            <div class="distribution-info">
+              <span class="distribution-label">{{ role }}</span>
+              <span class="distribution-value">{{ getStatusDistributionValue(stats.userDistribution, role) }}</span>
+            </div>
           </div>
-        </dd>
+        </div>
       </div>
     </div>
-    
-    <!-- Active Tasks Card -->
-    <div class="stat-card">
-      <div class="card-content">
-        <dt>Active Tasks</dt>
-        <dd>
-          <div class="stat-value text-green-600">
-            24
+
+    <!-- Contractor Dashboard -->
+    <div *ngIf="role === 'Contractor'" class="contractor-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
+          <h3>Total Projects</h3>
+          <p class="stat-value">{{ stats.totalProjects }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+          <h3>Total Tasks</h3>
+          <p class="stat-value">{{ stats.totalTasks }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-boxes"></i></div>
+          <h3>Total Materials</h3>
+          <p class="stat-value">{{ stats.totalMaterials }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+          <h3>Total Documents</h3>
+          <p class="stat-value">{{ stats.totalDocuments }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+          <h3>Total Invoices</h3>
+          <p class="stat-value">{{ stats.totalInvoices }}</p>
+        </div>
+      </div>
+
+      <div class="distribution-section">
+        <h2><i class="fas fa-chart-bar"></i> Task Status Distribution</h2>
+        <div class="distribution-grid">
+          <div *ngFor="let status of getStatusDistributionKeys(stats.taskStatusDistribution)" class="distribution-card">
+            <div class="stat-icon"><i class="fas fa-clipboard-check"></i></div>
+            <h4>{{ status }}</h4>
+            <p class="stat-value">{{ getStatusDistributionValue(stats.taskStatusDistribution, status) }}</p>
           </div>
-        </dd>
+        </div>
+      </div>
+
+      <div class="distribution-section">
+        <h2><i class="fas fa-chart-line"></i> Project Status Distribution</h2>
+        <div class="distribution-grid">
+          <div *ngFor="let status of getStatusDistributionKeys(stats.projectStatusDistribution)" class="distribution-card">
+            <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
+            <h4>{{ status }}</h4>
+            <p class="stat-value">{{ getStatusDistributionValue(stats.projectStatusDistribution, status) }}</p>
+          </div>
+        </div>
       </div>
     </div>
-    
-    <!-- Pending Invoices Card -->
-    <div class="stat-card">
-      <div class="card-content">
-        <dt>Pending Invoices</dt>
-        <dd>
-          <div class="stat-value text-yellow-600">
-            8
+
+    <!-- Site Engineer Dashboard -->
+    <div *ngIf="role === 'SiteEngineer'" class="site-engineer-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+          <h3>Total Tasks</h3>
+          <p class="stat-value">{{ stats.totalTasks }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-boxes"></i></div>
+          <h3>Total Materials</h3>
+          <p class="stat-value">{{ stats.totalMaterials }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+          <h3>Total Documents</h3>
+          <p class="stat-value">{{ stats.totalDocuments }}</p>
+        </div>
+      </div>
+
+      <div class="distribution-section">
+        <h2><i class="fas fa-chart-bar"></i> Task Status Distribution</h2>
+        <div class="distribution-grid">
+          <div *ngFor="let status of getStatusDistributionKeys(stats.taskStatusDistribution)" class="distribution-card">
+            <div class="stat-icon"><i class="fas fa-clipboard-check"></i></div>
+            <h4>{{ status }}</h4>
+            <p class="stat-value">{{ getStatusDistributionValue(stats.taskStatusDistribution, status) }}</p>
           </div>
-        </dd>
+        </div>
       </div>
     </div>
-    
-    <!-- Total Materials Card -->
-    <div class="stat-card">
-      <div class="card-content">
-        <dt>Total Materials</dt>
-        <dd>
-          <div class="stat-value text-purple-600">
-            156
+
+    <!-- Client Dashboard -->
+    <div *ngIf="role === 'Client'" class="client-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
+          <h3>Total Projects</h3>
+          <p class="stat-value">{{ stats.totalProjects }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+          <h3>Total Documents</h3>
+          <p class="stat-value">{{ stats.totalDocuments }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+          <h3>Total Invoices</h3>
+          <p class="stat-value">{{ stats.totalInvoices }}</p>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+          <h3>Total Payments</h3>
+          <p class="stat-value">{{ stats.totalPayments }}</p>
+        </div>
+      </div>
+
+      <div class="distribution-section">
+        <h2><i class="fas fa-chart-line"></i> Project Status Distribution</h2>
+        <div class="distribution-grid">
+          <div *ngFor="let status of getStatusDistributionKeys(stats.projectStatusDistribution)" class="distribution-card">
+            <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
+            <h4>{{ status }}</h4>
+            <p class="stat-value">{{ getStatusDistributionValue(stats.projectStatusDistribution, status) }}</p>
           </div>
-        </dd>
+        </div>
+      </div>
+
+      <div class="distribution-section">
+        <h2><i class="fas fa-chart-pie"></i> Payment Status Distribution</h2>
+        <div class="distribution-grid">
+          <div *ngFor="let status of getStatusDistributionKeys(stats.paymentStatusDistribution)" class="distribution-card">
+            <div class="stat-icon"><i class="fas fa-money-check"></i></div>
+            <h4>{{ status }}</h4>
+            <p class="stat-value">{{ getStatusDistributionValue(stats.paymentStatusDistribution, status) }}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Recent Activity -->
-  <div class="recent-activity">
-    <div class="activity-content">
-      <h2>Recent Activity</h2>
-      <div class="activity-list">
-        <ul>
-          <li>
-            <div class="activity-item">
-              <span class="connector-line" aria-hidden="true"></span>
-              <div class="activity-details">
-                <div>
-                  <span class="icon-container bg-blue-100">
-                    <svg class="h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.69c.05.101.09.204.123.31.093.306.05.6-.123.846l-4.5 4.5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L8 12.586l4.157-4.157a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                  </span>
-                </div>
-                <div class="content-container">
-                  <div>
-                    <p>New project "Office Renovation" created</p>
-                  </div>
-                  <div class="timestamp">
-                    <time datetime="2020-09-20">2 hours ago</time>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-
-          <li>
-            <div class="activity-item">
-              <span class="connector-line" aria-hidden="true"></span>
-              <div class="activity-details">
-                <div>
-                  <span class="icon-container bg-green-100">
-                     <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.69c.05.101.09.204.123.31.093.306.05.6-.123.846l-4.5 4.5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L8 12.586l4.157-4.157a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                  </span>
-                </div>
-                <div class="content-container">
-                  <div>
-                    <p>Task "Install Windows" completed</p>
-                  </div>
-                  <div class="timestamp">
-                    <time datetime="2020-09-28">4 hours ago</time>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-
-          <li>
-            <div class="activity-item">
-              <div class="activity-details">
-                <div>
-                  <span class="icon-container bg-yellow-100">
-                    <svg class="h-5 w-5 text-yellow-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 002-2V4H4zm10 12a2 2 0 002-2v-3a2 2 0 00-2-2H4a2 2 0 00-2 2v3a2 2 0 002 2h10zm-4.5-2a.5.5 0 000-1H8a.5.5 0 000 1h1.5z" clip-rule="evenodd" />
-                    </svg>
-                  </span>
-                </div>
-                <div class="content-container">
-                  <div>
-                    <p>New invoice #1234 submitted</p>
-                  </div>
-                  <div class="timestamp">
-                    <time datetime="2020-10-01">1 day ago</time>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </li>
-
-          <!-- More items... -->
-        </ul>
-      </div>
-    </div>
+  <!-- Gantt Chart Tab -->
+  <div *ngIf="activeTab === 'gantt'" class="gantt-container">
+    <div id="gantt-container" class="gantt-chart"></div>
   </div>
 </div> 

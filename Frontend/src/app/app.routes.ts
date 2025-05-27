@@ -100,18 +100,35 @@ export const routes: Routes = [
           }
         ]
       },
-      // {
-      //   path: 'tasks',
-      //   loadComponent: () => import('./features/tasks/tasks.component').then(m => m.TasksComponent),
-      //   canActivate: [RoleGuard],
-      //   data: { roles: [Role.ADMIN, Role.CONTRACTOR, Role.SITE_ENGINEER] }
-      // },
-      // {
-      //   path: 'materials',
-      //   loadComponent: () => import('./features/materials/materials.component').then(m => m.MaterialsComponent),
-      //   canActivate: [RoleGuard],
-      //   data: { roles: [Role.ADMIN, Role.CONTRACTOR, Role.SITE_ENGINEER] }
-      // },
+      {
+        path: 'tasks',
+        canActivate: [RoleGuard],
+        data: { roles: [Role.ADMIN, Role.CONTRACTOR, Role.SITE_ENGINEER] },
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./features/tasks/task-list/task-list.component').then(m => m.TaskListComponent)
+          },
+          {
+            path: 'create',
+            loadComponent: () => import('./features/tasks/task-form/task-form.component').then(m => m.TaskFormComponent)
+          },
+          {
+            path: 'edit/:id',
+            loadComponent: () => import('./features/tasks/task-form/task-form.component').then(m => m.TaskFormComponent)
+          },
+          {
+            path: ':id',
+            loadComponent: () => import('./features/tasks/task-details/task-details.component').then(m => m.TaskDetailsComponent)
+          }
+        ]
+      },
+      {
+        path: 'materials',
+        loadChildren: () => import('./features/material/material.module').then(m => m.MaterialModule),
+        canActivate: [RoleGuard],
+        data: { roles: [Role.ADMIN, Role.SITE_ENGINEER] }
+      },
       // {
       //   path: 'documents',
       //   loadComponent: () => import('./features/documents/documents.component').then(m => m.DocumentsComponent),
