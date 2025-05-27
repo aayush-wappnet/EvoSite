@@ -1,0 +1,106 @@
+<div class="container">
+  <div class="form-container">
+    <h2><i class="fas fa-boxes"></i> {{ isEditMode ? 'Edit Material' : 'Create Material' }}</h2>
+
+    <form [formGroup]="materialForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name"><i class="fas fa-tag"></i> Name</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="form-control"
+          [class.is-invalid]="materialForm.get('name')?.invalid && materialForm.get('name')?.touched"
+        >
+        <div class="invalid-feedback" *ngIf="materialForm.get('name')?.invalid && materialForm.get('name')?.touched">
+          Name is required
+        </div>
+        <div class="current-value" *ngIf="isEditMode">
+          Current: {{ currentMaterial?.name }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="quantity"><i class="fas fa-balance-scale"></i> Quantity</label>
+        <input
+          type="number"
+          id="quantity"
+          formControlName="quantity"
+          class="form-control"
+          [class.is-invalid]="materialForm.get('quantity')?.invalid && materialForm.get('quantity')?.touched"
+        >
+        <div class="invalid-feedback" *ngIf="materialForm.get('quantity')?.invalid && materialForm.get('quantity')?.touched">
+          Quantity must be a positive number
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="unit"><i class="fas fa-ruler"></i> Unit</label>
+        <input
+          type="text"
+          id="unit"
+          formControlName="unit"
+          class="form-control"
+          [class.is-invalid]="materialForm.get('unit')?.invalid && materialForm.get('unit')?.touched"
+        >
+        <div class="invalid-feedback" *ngIf="materialForm.get('unit')?.invalid && materialForm.get('unit')?.touched">
+          Unit is required
+        </div>
+        <div class="current-value" *ngIf="isEditMode">
+          Current: {{ currentMaterial?.unit }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="vendorId"><i class="fas fa-truck"></i> Vendor</label>
+        <select
+          id="vendorId"
+          formControlName="vendorId"
+          class="form-control"
+          [class.is-invalid]="materialForm.get('vendorId')?.invalid && materialForm.get('vendorId')?.touched"
+        >
+          <option value="">Select a vendor</option>
+          <option *ngFor="let vendor of vendors" [value]="vendor.id">
+            {{ vendor.name }}
+          </option>
+        </select>
+        <div class="invalid-feedback" *ngIf="materialForm.get('vendorId')?.invalid && materialForm.get('vendorId')?.touched">
+          Vendor is required
+        </div>
+        <div class="current-value" *ngIf="isEditMode">
+          Current: {{ currentMaterial?.vendor?.name }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="siteId"><i class="fas fa-map-marker-alt"></i> Site</label>
+        <select
+          id="siteId"
+          formControlName="siteId"
+          class="form-control"
+          [class.is-invalid]="materialForm.get('siteId')?.invalid && materialForm.get('siteId')?.touched"
+        >
+          <option value="">Select a site</option>
+          <option *ngFor="let site of sites" [value]="site.id">
+            {{ site.name }}
+          </option>
+        </select>
+        <div class="invalid-feedback" *ngIf="materialForm.get('siteId')?.invalid && materialForm.get('siteId')?.touched">
+          Site is required
+        </div>
+        <div class="current-value" *ngIf="isEditMode">
+          Current: {{ getSiteName(currentMaterial?.siteId) }}
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="materialForm.invalid">
+          <i class="fas fa-save"></i> {{ isEditMode ? 'Update' : 'Create' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div> 

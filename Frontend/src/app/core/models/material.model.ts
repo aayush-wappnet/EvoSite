@@ -7,16 +7,16 @@ export interface Material {
   name: string;
   quantity: number;
   unit: string;
-  vendorId: string;
   siteId: string;
+  vendor: {
+    id: string;
+    name: string;
+  };
   createdAt: Date;
   updatedAt: Date;
-  site?: Site;
-  vendor?: Vendor;
-  invoiceItems?: InvoiceItem[];
 }
 
-export interface CreateMaterialDto {
+export interface CreateMaterial {
   name: string;
   quantity: number;
   unit: string;
@@ -24,6 +24,6 @@ export interface CreateMaterialDto {
   siteId: string;
 }
 
-export interface UpdateMaterialDto {
+export interface UpdateMaterial {
   quantity?: number;
 } 
