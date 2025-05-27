@@ -57,7 +57,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
-    gantt['destroy']();
+    if (gantt && typeof gantt['destroy'] === 'function') {
+      gantt['destroy']();
+    }
   }
 
   loadStats(): void {

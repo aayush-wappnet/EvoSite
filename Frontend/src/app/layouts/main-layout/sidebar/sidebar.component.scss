@@ -53,7 +53,7 @@
             background-color: #34495e; /* Darker hover background */
           }
 
-          &.router-link-active {
+          &.active {
             background-color: #3498db; /* Highlight color for active link */
             color: #ffffff; /* White text for active link */
           }
@@ -85,6 +85,7 @@
       align-items: center;
       width: 100%; /* Take full width */
       margin-bottom: 1rem; /* Space below user details */
+      margin-left: 45px;
 
       .avatar-placeholder {
         width: 2rem;
@@ -97,20 +98,18 @@
       .user-text {
         flex-grow: 1;
 
-        // p:first-child {
-        //   font-size: 0.9rem;
-        //   font-weight: 500;
-        //   color: #ecf0f1;
-        // }
-
-        p:last-child {
-
+        p {
           font-size: 0.9rem;
           font-weight: 500;
           color: #ecf0f1;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
 
-          // font-size: 0.8rem;
-          // color: #bdc3c7; /* Lighter gray for role */
+          i {
+            font-size: 1rem;
+            color: #3498db;
+          }
         }
       }
     }
@@ -129,6 +128,18 @@
 
         &:hover {
           background-color: #34495e;
+        }
+
+        &.logout-link {
+          color: #e74c3c; /* Red color for logout */
+
+          &:hover {
+            background-color: rgba(231, 76, 60, 0.1); /* Light red background on hover */
+          }
+
+          i {
+            color: #e74c3c; /* Red color for logout icon */
+          }
         }
 
         i {

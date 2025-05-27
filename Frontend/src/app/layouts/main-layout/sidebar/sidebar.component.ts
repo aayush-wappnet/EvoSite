@@ -111,4 +111,21 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
+  getRoleIcon(): string {
+    if (!this.currentUser) return 'fas fa-user';
+    
+    switch (this.currentUser.role) {
+      case Role.ADMIN:
+        return 'fas fa-user-shield';
+      case Role.CONTRACTOR:
+        return 'fas fa-hard-hat';
+      case Role.SITE_ENGINEER:
+        return 'fas fa-user-cog';
+      case Role.CLIENT:
+        return 'fas fa-user-tie';
+      default:
+        return 'fas fa-user';
+    }
+  }
 } 
