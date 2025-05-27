@@ -4,6 +4,7 @@ import { Site } from './site.model';
 import { Task } from './task.model';
 import { Document } from './document.model';
 import { Invoice } from './invoice.model';
+import { AssignUserDto } from './shared.dto';
 
 export interface Project {
   id: string;
@@ -37,6 +38,4 @@ export interface UpdateProjectDto {
   status?: ProjectStatus;
 }
 
-export interface AssignUserDto {
-  userId: string;
-} 
+export type { AssignUserDto }; 

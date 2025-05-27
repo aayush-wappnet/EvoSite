@@ -1,0 +1,265 @@
+<div class="task-details">
+  <div class="task-details__header">
+    <button routerLink="/tasks" class="back-button">
+      <i class="fas fa-arrow-left"></i> Back to Tasks
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <i class="fas fa-spinner fa-spin"></i> Loading task details...
+  </div>
+
+  <div *ngIf="error" class="error">
+    <i class="fas fa-exclamation-circle"></i> {{ error }}
+  </div>
+
+  <div *ngIf="task && !loading" class="task-details__content">
+    <div class="task-details__main">
+      <h1 class="task-details__title">
+        <i class="fas fa-tasks"></i>
+        {{ task.title }}
+      </h1>
+      
+      <div class="task-details__info">
+        <div class="info-section">
+          <h2><i class="fas fa-info-circle"></i> Task Information</h2>
+          <p class="description">{{ task.description }}</p>
+          <div class="dates">
+            <span><i class="fas fa-calendar-alt"></i> Start Date: {{ task.startDate | date:'mediumDate' }}</span>
+            <span><i class="fas fa-calendar-check"></i> End Date: {{ task.endDate | date:'mediumDate' }}</span>
+          </div>
+          <span class="status" [class]="'status--' + task.status.toLowerCase()">
+            <i class="fas fa-circle"></i> {{ task.status }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="task-details__sections">
+      <div class="section">
+        <div class="section__header">
+          <h2><i class="fas fa-building"></i> Site & Project Information</h2>
+        </div>
+        <div class="site-info" *ngIf="task.site">
+          <div class="info-card">
+            <div class="info-section">
+              <h3><i class="fas fa-map-marker-alt"></i> Site Details</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="label">Name:</span>
+                  <span class="value">{{ task.site.name }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Location:</span>
+                  <span class="value">{{ task.site.location }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Created:</span>
+                  <span class="value">{{ task.site.createdAt | date:'medium' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Last Updated:</span>
+                  <span class="value">{{ task.site.updatedAt | date:'medium' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-section" *ngIf="task.site.project">
+              <h3><i class="fas fa-project-diagram"></i> Project Details</h3>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="label">Name:</span>
+                  <span class="value">{{ task.site.project.name }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Description:</span>
+                  <span class="value">{{ task.site.project.description }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Status:</span>
+                  <span class="value status-badge" [class]="'status--' + task.site.project.status.toLowerCase()">
+                    {{ task.site.project.status }}
+                  </span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Timeline:</span>
+                  <span class="value">
+                    {{ task.site.project.startDate | date:'mediumDate' }} - {{ task.site.project.endDate | date:'mediumDate' }}
+                  </span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Created:</span>
+                  <span class="value">{{ task.site.project.createdAt | date:'medium' }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Last Updated:</span>
+                  <span class="value">{{ task.site.project.updatedAt | date:'medium' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section__header">
+          <h2><i class="fas fa-users"></i> Assigned Users</h2>
+          <button *ngIf="canAssignUser()" class="btn-secondary" (click)="showAssignUserDialog()">
+            <i class="fas fa-user-plus"></i> Assign User
+          </button>
+        </div>
+        <div class="users-list" *ngIf="hasAssignedUsers()">
+          <div class="user-item" *ngFor="let user of getAssignedUsers()">
+            <div class="user-info">
+              <h3>{{ user.name }}</h3>
+              <p><i class="fas fa-envelope"></i> {{ user.email }}</p>
+              <span class="role" [class]="'role--' + user.role.toLowerCase()">
+                {{ user.role }}
+              </span>
+            </div>
+            <button *ngIf="canAssignUser()" class="remove-user" (click)="removeUser(user.id)">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <p *ngIf="!hasAssignedUsers()" class="no-users">
+          No users assigned to this task
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="section__header">
+          <h2><i class="fas fa-link"></i> Dependencies</h2>
+          <button *ngIf="canAssignUser()" class="btn-secondary" (click)="showDependencyDialog()">
+            <i class="fas fa-plus"></i> Add Dependency
+          </button>
+        </div>
+        <div class="dependencies-grid" *ngIf="dependencies.length > 0">
+          <div *ngFor="let dependency of dependencies" class="dependency-card">
+            <ng-container *ngIf="getDependentTask(dependency.dependentTaskId) as dependentTask">
+              <h3>{{ dependentTask.title }}</h3>
+              <p>
+                <i class="fas fa-calendar"></i> 
+                Due: {{ dependentTask.endDate | date:'mediumDate' }}
+              </p>
+              <span class="status" [class]="'status--' + dependentTask.status.toLowerCase()">
+                {{ dependentTask.status }}
+              </span>
+              <p class="created-at">
+                <i class="fas fa-clock"></i>
+                Added: {{ dependency.createdAt | date:'medium' }}
+              </p>
+            </ng-container>
+          </div>
+        </div>
+        <p *ngIf="!dependencies.length" class="no-dependencies">
+          No dependencies added to this task
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Dialog -->
+  <div class="modal" *ngIf="showConfirmDialog">
+    <div class="modal__content">
+      <div class="modal__header">
+        <h2>Confirm Delete</h2>
+        <button class="modal__close" (click)="cancelDelete()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal__body">
+        <p class="confirmation-message">
+          Are you sure you want to delete this task?
+        </p>
+        <div class="confirmation-actions">
+          <button class="cancel-button" (click)="cancelDelete()">
+            Cancel
+          </button>
+          <button class="confirm-button" (click)="confirmDelete()">
+            Delete Task
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assign User Dialog -->
+  <div class="modal" *ngIf="showAssignDialog">
+    <div class="modal__content">
+      <div class="modal__header">
+        <h2>Assign User</h2>
+        <button class="modal__close" (click)="cancelAssign()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal__body">
+        <div class="form-group">
+          <label for="contractor">Select Contractor</label>
+          <select 
+            id="contractor" 
+            [(ngModel)]="selectedContractorId" 
+            class="form-control">
+            <option [ngValue]="''">Select a contractor</option>
+            <option *ngFor="let contractor of contractors" [value]="contractor.id">
+              {{ contractor.name }} ({{ contractor.email }})
+            </option>
+          </select>
+        </div>
+
+        <div class="confirmation-actions">
+          <button class="cancel-button" (click)="cancelAssign()">
+            Cancel
+          </button>
+          <button 
+            class="confirm-button" 
+            (click)="assignUser()" 
+            [disabled]="!selectedContractorId">
+            Assign User
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Dependency Dialog -->
+  <div class="modal" *ngIf="isDependencyDialogVisible">
+    <div class="modal__content">
+      <div class="modal__header">
+        <h2>Add Task Dependency</h2>
+        <button class="modal__close" (click)="cancelDependency()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal__body">
+        <div class="form-group">
+          <label for="dependentTask">Select Dependent Task</label>
+          <select 
+            id="dependentTask" 
+            [(ngModel)]="selectedDependentTaskId" 
+            class="form-control">
+            <option [ngValue]="''">Select a task</option>
+            <option *ngFor="let task of availableTasks" [value]="task.id">
+              {{ task.title }} ({{ task.status }})
+            </option>
+          </select>
+        </div>
+
+        <div class="confirmation-actions">
+          <button class="cancel-button" (click)="cancelDependency()">
+            Cancel
+          </button>
+          <button 
+            class="confirm-button" 
+            (click)="createDependency()" 
+            [disabled]="!selectedDependentTaskId">
+            Add Dependency
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
