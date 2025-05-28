@@ -1,0 +1,127 @@
+<div class="document-form">
+  <div class="form-header">
+    <h2><i class="fas fa-file-alt"></i> {{ isEditMode ? 'Edit Document' : 'Create Document' }}</h2>
+  </div>
+
+  <div class="error" *ngIf="error">
+    <i class="fas fa-exclamation-circle"></i> {{ error }}
+  </div>
+
+  <form [formGroup]="documentForm" (ngSubmit)="onSubmit()" class="form-content">
+    <div class="form-group">
+      <label for="name">
+        <i class="fas fa-file-signature"></i> Name
+      </label>
+      <input 
+        type="text" 
+        id="name" 
+        formControlName="name" 
+        placeholder="Enter document name"
+        [ngClass]="{'error': documentForm.get('name')?.invalid && documentForm.get('name')?.touched}"
+      >
+      <div class="error-message" *ngIf="documentForm.get('name')?.invalid && documentForm.get('name')?.touched">
+        {{ isEditMode ? 'Name must be at least 3 characters if provided' : 'Name is required' }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="version">
+        <i class="fas fa-code-branch"></i> Version
+      </label>
+      <input 
+        type="text" 
+        id="version" 
+        formControlName="version" 
+        placeholder="Enter version (e.g., 1.0)"
+        [ngClass]="{'error': documentForm.get('version')?.invalid && documentForm.get('version')?.touched}"
+      >
+      <div class="error-message" *ngIf="documentForm.get('version')?.invalid && documentForm.get('version')?.touched">
+        {{ isEditMode ? 'Version must be in format x.x if provided' : 'Version is required' }}
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="!isEditMode">
+      <label for="type">
+        <i class="fas fa-tag"></i> Document Type
+      </label>
+      <select 
+        id="type" 
+        formControlName="type"
+        [ngClass]="{'error': documentForm.get('type')?.invalid && documentForm.get('type')?.touched}"
+      >
+        <option value="">Select document type</option>
+        <option *ngFor="let type of documentTypes" [value]="type">
+          {{ type }}
+        </option>
+      </select>
+      <div class="error-message" *ngIf="documentForm.get('type')?.invalid && documentForm.get('type')?.touched">
+        {{ isEditMode ? 'Select a valid document type if changing' : 'Document type is required' }}
+      </div>
+    </div>
+
+    <div class="form-group" *ngIf="!isEditMode">
+      <label for="projectId">
+        <i class="fas fa-project-diagram"></i> Project
+      </label>
+      <select
+        id="projectId"
+        formControlName="projectId"
+        [ngClass]="{'error': documentForm.get('projectId')?.invalid && documentForm.get('projectId')?.touched}"
+      >
+        <option value="">Select project</option>
+        <option *ngFor="let project of projects" [value]="project.id">
+          {{ project.name }}
+        </option>
+      </select>
+      <div class="error-message" *ngIf="documentForm.get('projectId')?.invalid && documentForm.get('projectId')?.touched">
+        {{ isEditMode ? 'Select a valid project if changing' : 'Project is required' }}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="file">
+        <i class="fas fa-file-upload"></i> Document File
+      </label>
+      <div class="file-upload-container" [ngClass]="{'has-file': selectedFile}">
+        <div class="file-upload-box" (click)="fileInput.click()">
+          <i class="fas" [ngClass]="selectedFile && selectedFile.type.startsWith('image/') ? 'fa-image' : 'fa-cloud-upload-alt'"></i>
+          <span *ngIf="!selectedFile">Click to choose file or drag and drop</span>
+          <span *ngIf="selectedFile" class="selected-file">
+            <i class="fas" [ngClass]="selectedFile && selectedFile.type.startsWith('image/') ? 'fa-image' : 'fa-file'"></i>
+            {{ selectedFile.name }}
+          </span>
+        </div>
+        <div class="file-preview" *ngIf="filePreview">
+          <img [src]="filePreview" alt="File preview">
+        </div>
+        <input 
+          #fileInput
+          type="file" 
+          id="file" 
+          (change)="onFileSelected($event)"
+          accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif"
+          style="display: none"
+        >
+        <div class="file-info" *ngIf="selectedFile">
+          <span class="file-size">{{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB</span>
+          <button type="button" class="remove-file" (click)="removeFile()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="error-message" *ngIf="fileError">
+        {{ fileError }}
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" routerLink="/documents">
+        <i class="fas fa-times"></i> Cancel
+      </button>
+      <button type="submit" class="btn-primary" [disabled]="!documentForm.valid || (!selectedFile && !isEditMode) || loading">
+        <i class="fas" [ngClass]="loading ? 'fa-spinner fa-spin' : (isEditMode ? 'fa-save' : 'fa-plus')"></i>
+        {{ loading ? 'Saving...' : (isEditMode ? 'Update Document' : 'Create Document') }}
+      </button>
+    </div>
+  </form>
+</div> 

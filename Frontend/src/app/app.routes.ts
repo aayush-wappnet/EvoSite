@@ -129,12 +129,25 @@ export const routes: Routes = [
         canActivate: [RoleGuard],
         data: { roles: [Role.ADMIN, Role.SITE_ENGINEER] }
       },
-      // {
-      //   path: 'documents',
-      //   loadComponent: () => import('./features/documents/documents.component').then(m => m.DocumentsComponent),
-      //   canActivate: [RoleGuard],
-      //   data: { roles: [Role.ADMIN, Role.CONTRACTOR, Role.SITE_ENGINEER, Role.CLIENT] }
-      // },
+      {
+        path: 'documents',
+        canActivate: [RoleGuard],
+        data: { roles: [Role.ADMIN, Role.CONTRACTOR, Role.SITE_ENGINEER, Role.CLIENT] },
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./features/documents/document-list/document-list.component').then(m => m.DocumentListComponent)
+          },
+          {
+            path: 'create',
+            loadComponent: () => import('./features/documents/document-form/document-form.component').then(m => m.DocumentFormComponent)
+          },
+          {
+            path: 'edit/:id',
+            loadComponent: () => import('./features/documents/document-form/document-form.component').then(m => m.DocumentFormComponent)
+          }
+        ]
+      },
       // {
       //   path: 'invoices',
       //   loadComponent: () => import('./features/invoices/invoices.component').then(m => m.InvoicesComponent),

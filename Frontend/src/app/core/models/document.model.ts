@@ -1,6 +1,4 @@
 import { DocumentType } from '../constants/document-type.enum';
-import { Project } from './project.model';
-import { User } from './user.model';
 
 export interface Document {
   id: string;
@@ -12,8 +10,6 @@ export interface Document {
   userId: string;
   createdAt: Date;
   updatedAt: Date;
-  project?: Project;
-  user?: User;
 }
 
 export interface CreateDocumentDto {

@@ -1,0 +1,273 @@
+.document-list {
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h2 {
+      margin: 0;
+      color: #333;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      i {
+        color: #4a90e2;
+      }
+    }
+
+    .create-button {
+      background: #4a90e2;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background: #357abd;
+      }
+
+      i {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .error {
+    background: #ffebee;
+    color: #c62828;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    i {
+      font-size: 24px;
+      color: #4a90e2;
+    }
+  }
+
+  .table-container {
+    overflow-x: auto;
+    margin: 20px 0;
+  }
+
+  .documents-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background: #f5f5f5;
+      font-weight: 600;
+      color: #333;
+      white-space: nowrap;
+    }
+
+    tr:hover {
+      background: #f8f9fa;
+    }
+
+    .document-name {
+      cursor: pointer;
+      color: #4a90e2;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .document-type {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 14px;
+      background: #e3f2fd;
+      color: #1976d2;
+
+      &.blueprint {
+        background: #e3f2fd;
+        color: #1976d2;
+      }
+
+      &.contract {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+
+      &.report {
+        background: #fff3e0;
+        color: #f57c00;
+      }
+
+      &.other {
+        background: #f5f5f5;
+        color: #616161;
+      }
+    }
+
+    .version, .upload-date {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-start;
+
+      .action-btn {
+        background: none;
+        border: none;
+        padding: 6px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.3s;
+        color: #666;
+
+        &:hover {
+          background: #f5f5f5;
+        }
+
+        &.edit:hover {
+          color: #4a90e2;
+        }
+
+        &.download:hover {
+          color: #2e7d32;
+        }
+
+        &.delete:hover {
+          color: #c62828;
+        }
+      }
+    }
+  }
+
+  .no-documents {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+
+    i {
+      font-size: 48px;
+      color: #ccc;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .delete-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+
+    .dialog-content {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      width: 400px;
+      max-width: 90%;
+
+      h3 {
+        margin: 0 0 16px;
+        color: #c62828;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      p {
+        margin: 0 0 24px;
+        color: #666;
+      }
+
+      .dialog-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+
+        button {
+          padding: 8px 16px;
+          border-radius: 4px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          border: none;
+
+          &.btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+
+            &:hover {
+              background: #eee;
+            }
+          }
+
+          &.btn-danger {
+            background: #c62828;
+            color: white;
+
+            &:hover {
+              background: #b71c1c;
+            }
+          }
+        }
+      }
+    }
+  }
+} 
