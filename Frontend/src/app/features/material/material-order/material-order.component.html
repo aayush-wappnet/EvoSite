@@ -1,0 +1,54 @@
+<div class="order-dialog">
+  <div class="dialog-header">
+    <h2>Order Material</h2>
+    <button class="close-btn" (click)="closeDialog()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="dialog-content">
+    <div class="material-info">
+      <h3>{{ material.name }}</h3>
+      <p>Quantity: {{ material.quantity }} {{ material.unit }}</p>
+      <p>Site: {{ material.site.name }}</p>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+      <i class="fas fa-exclamation-circle"></i>
+      {{ error }}
+    </div>
+
+    <form [formGroup]="orderForm" (ngSubmit)="onSubmit()" class="order-form">
+      <div class="form-group">
+        <label for="vendorId">
+          <i class="fas fa-truck"></i>
+          Select Vendor
+        </label>
+        <select
+          id="vendorId"
+          formControlName="vendorId"
+          [class.error]="submitted && f['vendorId'].errors"
+        >
+          <option value="">Select a vendor</option>
+          <option *ngFor="let vendor of vendors" [value]="vendor.id">
+            {{ vendor.name }}
+          </option>
+        </select>
+        <div *ngIf="submitted && f['vendorId'].errors" class="error-text">
+          <span *ngIf="f['vendorId'].errors['required']">Please select a vendor</span>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="cancel-btn" (click)="closeDialog()">
+          <i class="fas fa-times"></i>
+          Cancel
+        </button>
+        <button type="submit" [disabled]="loading" class="submit-btn">
+          <i class="fas" [class.fa-spinner]="loading" [class.fa-shopping-cart]="!loading"></i>
+          {{ loading ? 'Placing Order...' : 'Place Order' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div> 

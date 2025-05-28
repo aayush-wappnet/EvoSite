@@ -1,0 +1,26 @@
+<div class="confirmation-dialog">
+  <div class="dialog-header">
+    <h2>{{ title }}</h2>
+    <button class="close-btn" (click)="onCancel()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="dialog-content">
+    <div class="message">
+      <i class="fas" [class.fa-exclamation-triangle]="type === 'warning'" [class.fa-exclamation-circle]="type === 'danger'"></i>
+      {{ message }}
+    </div>
+
+    <div class="dialog-actions">
+      <button type="button" class="cancel-btn" (click)="onCancel()">
+        <i class="fas fa-times"></i>
+        {{ cancelText }}
+      </button>
+      <button type="button" [class]="'confirm-btn ' + type" (click)="onConfirm()">
+        <i class="fas fa-check"></i>
+        {{ confirmText }}
+      </button>
+    </div>
+  </div>
+</div> 

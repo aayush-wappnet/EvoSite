@@ -127,7 +127,7 @@ export const routes: Routes = [
         path: 'materials',
         loadChildren: () => import('./features/material/material.module').then(m => m.MaterialModule),
         canActivate: [RoleGuard],
-        data: { roles: [Role.ADMIN, Role.SITE_ENGINEER] }
+        data: { roles: [Role.ADMIN, Role.CONTRACTOR, Role.SITE_ENGINEER] }
       },
       {
         path: 'documents',
@@ -148,12 +148,6 @@ export const routes: Routes = [
           }
         ]
       },
-      // {
-      //   path: 'invoices',
-      //   loadComponent: () => import('./features/invoices/invoices.component').then(m => m.InvoicesComponent),
-      //   canActivate: [RoleGuard],
-      //   data: { roles: [Role.ADMIN, Role.CONTRACTOR] }
-      // },
       {
         path: '',
         redirectTo: 'dashboard',
