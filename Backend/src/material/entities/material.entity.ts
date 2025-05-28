@@ -2,6 +2,8 @@ import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGenerate
 import { Site } from '../../site/entities/site.entity';
 import { Vendor } from '../../vendor/entities/vendor.entity';
 import { InvoiceItem } from '../../invoice/entities/invoice-item.entity';
+import { MaterialStatus } from '../../common/enums/material-status.enum';
+import { User } from '../../user/entities/user.entity';
 
 @Entity('materials')
 export class Material {
@@ -17,11 +19,21 @@ export class Material {
   @Column()
   unit: string;
 
-  @Column()
+  @Column({ nullable: true })
   vendorId: string;
 
   @Column()
   siteId: string;
+
+  @Column({
+    type: 'enum',
+    enum: MaterialStatus,
+    default: MaterialStatus.REQUESTED
+  })
+  status: MaterialStatus;
+
+  @Column()
+  requestedById: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -34,6 +46,9 @@ export class Material {
 
   @ManyToOne(() => Vendor, vendor => vendor.materials)
   vendor: Vendor;
+
+  @ManyToOne(() => User, user => user.materialRequests)
+  requestedBy: User;
 
   @OneToMany(() => InvoiceItem, invoiceItem => invoiceItem.material)
   invoiceItems: InvoiceItem[];

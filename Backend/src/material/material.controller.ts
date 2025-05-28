@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Patch, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MaterialService } from './material.service';
 import { CreateMaterialDto } from './dto/create-material.dto';
@@ -8,6 +8,8 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { Role } from '../common/enums/role.enum';
+import { MaterialStatus } from '../common/enums/material-status.enum';
+import { OrderMaterialDto } from './dto/order-material.dto';
 
 @ApiTags('Materials')
 @Controller('materials')
@@ -16,50 +18,72 @@ import { Role } from '../common/enums/role.enum';
 export class MaterialController {
   constructor(private readonly materialService: MaterialService) {}
 
-  @Post()
-  @Roles(Role.ADMIN, Role.SITE_ENGINEER)
-  @ApiOperation({ summary: 'Create a new material' })
-  @ApiResponse({ status: 201, description: 'Material created successfully', type: MaterialResponseDto })
-  async create(@Body() createMaterialDto: CreateMaterialDto): Promise<MaterialResponseDto> {
+  @Post('request')
+  @Roles(Role.SITE_ENGINEER)
+  @ApiOperation({ summary: 'Request materials for a site' })
+  @ApiResponse({ status: 201, description: 'Material request created successfully', type: MaterialResponseDto })
+  async requestMaterial(@Body() createMaterialDto: CreateMaterialDto): Promise<MaterialResponseDto> {
     return this.materialService.create(createMaterialDto);
   }
 
   @Get()
-  @Roles(Role.ADMIN, Role.SITE_ENGINEER)
-  @ApiOperation({ summary: 'Get all materials' })
-  @ApiResponse({ status: 200, description: 'Return all materials', type: [MaterialResponseDto] })
-  async findAll(): Promise<MaterialResponseDto[]> {
-    return this.materialService.findAll();
+  @Roles(Role.ADMIN, Role.CONTRACTOR, Role.SITE_ENGINEER)
+  @ApiOperation({ summary: 'Get all material requests' })
+  @ApiResponse({ status: 200, description: 'Return all material requests', type: [MaterialResponseDto] })
+  async findAll(@Request() req): Promise<MaterialResponseDto[]> {
+    return this.materialService.findAll(req.user.role, req.user.id);
   }
 
   @Get(':id')
-  @Roles(Role.ADMIN, Role.SITE_ENGINEER)
-  @ApiOperation({ summary: 'Get a material by ID' })
-  @ApiResponse({ status: 200, description: 'Return the material', type: MaterialResponseDto })
-  @ApiResponse({ status: 404, description: 'Material not found' })
+  @Roles(Role.ADMIN, Role.CONTRACTOR, Role.SITE_ENGINEER)
+  @ApiOperation({ summary: 'Get a material request by ID' })
+  @ApiResponse({ status: 200, description: 'Return the material request', type: MaterialResponseDto })
+  @ApiResponse({ status: 404, description: 'Material request not found' })
   async findOne(@Param('id') id: string): Promise<MaterialResponseDto> {
     return this.materialService.findOne(id);
   }
 
-  @Put(':id')
-  @Roles(Role.ADMIN, Role.SITE_ENGINEER)
-  @ApiOperation({ summary: 'Update a material' })
-  @ApiResponse({ status: 200, description: 'Material updated successfully', type: MaterialResponseDto })
-  @ApiResponse({ status: 404, description: 'Material not found' })
-  async update(
+  @Patch(':id/approve')
+  @Roles(Role.ADMIN, Role.CONTRACTOR)
+  @ApiOperation({ summary: 'Approve a material request' })
+  @ApiResponse({ status: 200, description: 'Material request approved successfully', type: MaterialResponseDto })
+  async approveRequest(@Param('id') id: string): Promise<MaterialResponseDto> {
+    return this.materialService.updateStatus(id, MaterialStatus.APPROVED);
+  }
+
+  @Patch(':id/reject')
+  @Roles(Role.ADMIN, Role.CONTRACTOR)
+  @ApiOperation({ summary: 'Reject a material request' })
+  @ApiResponse({ status: 200, description: 'Material request rejected successfully', type: MaterialResponseDto })
+  async rejectRequest(@Param('id') id: string): Promise<MaterialResponseDto> {
+    return this.materialService.updateStatus(id, MaterialStatus.REJECTED);
+  }
+
+  @Patch(':id/order')
+  @Roles(Role.ADMIN, Role.CONTRACTOR)
+  @ApiOperation({ summary: 'Order material from vendor' })
+  @ApiResponse({ status: 200, description: 'Material ordered successfully', type: MaterialResponseDto })
+  async orderMaterial(
     @Param('id') id: string,
-    @Body() updateMaterialDto: UpdateMaterialDto,
+    @Body() orderDto: OrderMaterialDto
   ): Promise<MaterialResponseDto> {
-    return this.materialService.update(id, updateMaterialDto);
+    return this.materialService.updateStatus(id, MaterialStatus.ORDERED, orderDto);
+  }
+
+  @Patch(':id/deliver')
+  @Roles(Role.SITE_ENGINEER)
+  @ApiOperation({ summary: 'Mark material as delivered' })
+  @ApiResponse({ status: 200, description: 'Material marked as delivered successfully', type: MaterialResponseDto })
+  async deliverMaterial(@Param('id') id: string): Promise<MaterialResponseDto> {
+    return this.materialService.updateStatus(id, MaterialStatus.DELIVERED);
   }
 
   @Delete(':id')
-  @Roles(Role.ADMIN)
-  @ApiOperation({ summary: 'Delete a material' })
-  @ApiResponse({ status: 200, description: 'Material deleted successfully' })
-  @ApiResponse({ status: 404, description: 'Material not found' })
+  @Roles(Role.SITE_ENGINEER)
+  @ApiOperation({ summary: 'Cancel a material request' })
+  @ApiResponse({ status: 200, description: 'Material request cancelled successfully' })
   async remove(@Param('id') id: string): Promise<{ message: string }> {
     await this.materialService.remove(id);
-    return { message: 'Material deleted successfully' };
+    return { message: 'Material request cancelled successfully' };
   }
 }
