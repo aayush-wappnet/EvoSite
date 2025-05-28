@@ -4,6 +4,7 @@ import { Project } from '../../project/entities/project.entity';
 import { Task } from '../../task/entities/task.entity';
 import { Document } from '../../document/entities/document.entity';
 import { Invoice } from '../../invoice/entities/invoice.entity';
+import { Material } from '../../material/entities/material.entity';
 import { Exclude } from 'class-transformer';
 
 @Entity('users')
@@ -55,4 +56,7 @@ export class User {
 
   @OneToMany(() => Invoice, invoice => invoice.contractor)
   invoices: Invoice[];
+
+  @OneToMany(() => Material, material => material.requestedBy)
+  materialRequests: Material[];
 }
