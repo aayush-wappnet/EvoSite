@@ -149,6 +149,25 @@ export const routes: Routes = [
         ]
       },
       {
+        path: 'invoices',
+        canActivate: [RoleGuard],
+        data: { roles: [Role.ADMIN, Role.CONTRACTOR, Role.SITE_ENGINEER] },
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./features/invoice/invoice-list/invoice-list.component').then(m => m.InvoiceListComponent)
+          },
+          {
+            path: 'create',
+            loadComponent: () => import('./features/invoice/create-invoice/create-invoice.component').then(m => m.CreateInvoiceComponent)
+          },
+          {
+            path: ':id',
+            loadComponent: () => import('./features/invoice/invoice-details/invoice-details.component').then(m => m.InvoiceDetailsComponent)
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

@@ -1,0 +1,106 @@
+<div class="create-invoice-container">
+  <div class="header">
+    <h1>Create New Invoice</h1>
+  </div>
+
+  <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="invoice-form">
+    <div class="form-section">
+      <h2>Project Details</h2>
+      
+      <div class="form-group">
+        <label for="projectId">Project *</label>
+        <select id="projectId" formControlName="projectId" (change)="onProjectChange($any($event.target).value)">
+          <option value="">Select Project</option>
+          <option *ngFor="let project of projects" [value]="project.id">
+            {{ project.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="taskId">Task (Optional)</label>
+        <select id="taskId" formControlName="taskId">
+          <option value="">Select Task</option>
+          <option *ngFor="let task of tasks" [value]="task.id">
+            {{ task.title }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>Invoice Items</h2>
+      
+      <div formArrayName="items" class="items-container">
+        <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="item-row">
+          <div class="item-header">
+            <h3>Item {{ i + 1 }}</h3>
+            <button type="button" class="remove-btn" (click)="removeInvoiceItem(i)" *ngIf="items.length > 1">
+              Remove
+            </button>
+          </div>
+
+          <div class="item-fields">
+            <div class="form-group">
+              <label [for]="'materialId' + i">Material *</label>
+              <select 
+                [id]="'materialId' + i" 
+                formControlName="materialId"
+                (change)="onMaterialSelect($any($event.target).value, i)"
+              >
+                <option value="">Select Material</option>
+                <option *ngFor="let material of materials" [value]="material.id">
+                  {{ material.name }} ({{ material.unit }})
+                </option>
+              </select>
+              <div class="material-info" *ngIf="getMaterialQuantity(i)">
+                Quantity: {{ getMaterialQuantity(i) }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label [for]="'unitPrice' + i">Unit Price (₹) *</label>
+              <input 
+                type="number" 
+                [id]="'unitPrice' + i" 
+                formControlName="unitPrice" 
+                min="0" 
+                step="0.01"
+                placeholder="Enter unit price"
+              >
+            </div>
+
+            <div class="total-info" *ngIf="calculateTotal(i) > 0">
+              Total: {{ formatCurrency(calculateTotal(i)) }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grand-total" *ngIf="calculateGrandTotal() > 0">
+        Grand Total: {{ formatCurrency(calculateGrandTotal()) }}
+      </div>
+
+      <button type="button" class="add-item-btn" (click)="addInvoiceItem()">
+        Add Another Item
+      </button>
+    </div>
+
+    <div class="error-message" *ngIf="error">
+      {{ error }}
+    </div>
+
+    <div class="success-message" *ngIf="success">
+      {{ success }}
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="cancel-btn" (click)="cancel()" [disabled]="loading">
+        Cancel
+      </button>
+      <button type="submit" class="submit-btn" [disabled]="loading || !invoiceForm.valid">
+        {{ loading ? 'Creating...' : 'Create Invoice' }}
+      </button>
+    </div>
+  </form>
+</div> 

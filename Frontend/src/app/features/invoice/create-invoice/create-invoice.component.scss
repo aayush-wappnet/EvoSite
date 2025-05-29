@@ -1,0 +1,203 @@
+.create-invoice-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+
+  .header {
+    margin-bottom: 30px;
+
+    h1 {
+      margin: 0;
+      color: #333;
+    }
+  }
+
+  .invoice-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .form-section {
+      margin-bottom: 30px;
+
+      h2 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 1.2em;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+        font-weight: 500;
+      }
+
+      select, input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+
+        &:focus {
+          outline: none;
+          border-color: #2196F3;
+        }
+      }
+
+      select {
+        background-color: white;
+      }
+    }
+
+    .items-container {
+      margin-bottom: 20px;
+    }
+
+    .item-row {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+
+      .item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+
+        h3 {
+          margin: 0;
+          color: #333;
+          font-size: 1.1em;
+        }
+
+        .remove-btn {
+          padding: 4px 8px;
+          background-color: #f44336;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 12px;
+
+          &:hover {
+            background-color: #d32f2f;
+          }
+        }
+      }
+
+      .item-fields {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 15px;
+      }
+    }
+
+    .material-info {
+      margin-top: 8px;
+      padding: 8px;
+      background: #e8f4fd;
+      border-radius: 4px;
+      color: #2c5282;
+      font-size: 14px;
+    }
+
+    .total-info {
+      margin-top: 8px;
+      padding: 8px;
+      background: #f0fff4;
+      border-radius: 4px;
+      color: #2f855a;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .grand-total {
+      margin: 20px 0;
+      padding: 15px;
+      background: #2f855a;
+      color: white;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 500;
+      text-align: right;
+    }
+
+    .add-item-btn {
+      padding: 8px 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-bottom: 20px;
+
+      &:hover {
+        background-color: #45a049;
+      }
+    }
+
+    .error-message {
+      color: #f44336;
+      padding: 10px;
+      margin-bottom: 20px;
+      background-color: #ffebee;
+      border-radius: 4px;
+    }
+
+    .success-message {
+      color: #4CAF50;
+      padding: 10px;
+      margin-bottom: 20px;
+      background-color: #e8f5e9;
+      border-radius: 4px;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 30px;
+
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+      }
+
+      .cancel-btn {
+        background-color: #f5f5f5;
+        color: #333;
+
+        &:hover:not(:disabled) {
+          background-color: #e0e0e0;
+        }
+      }
+
+      .submit-btn {
+        background-color: #2196F3;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background-color: #1976D2;
+        }
+      }
+    }
+  }
+} 

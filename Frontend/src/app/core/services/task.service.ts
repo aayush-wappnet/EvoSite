@@ -76,4 +76,11 @@ export class TaskService {
       { headers: this.getHeaders() }
     );
   }
+
+  getTasksByProjectId(projectId: string): Observable<Task[]> {
+    return this.http.get<Task[]>(
+      `${this.apiUrl}/project/${projectId}`,
+      { headers: this.getHeaders() }
+    );
+  }
 } 

@@ -12,7 +12,6 @@ export interface InvoiceItem {
   quantity: number;
   unitPrice: number;
   total: number;
-  description?: string;
   createdAt: Date;
   invoice?: Invoice;
   material?: Material;
@@ -36,14 +35,10 @@ export interface Invoice {
 
 export interface CreateInvoiceItemDto {
   materialId: string;
-  quantity: number;
   unitPrice: number;
-  total: number;
-  description?: string;
 }
 
 export interface CreateInvoiceDto {
-  amount: number;
   projectId: string;
   taskId?: string;
   items: CreateInvoiceItemDto[];
