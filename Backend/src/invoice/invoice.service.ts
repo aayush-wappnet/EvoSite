@@ -30,32 +30,46 @@ export class InvoiceService {
       await this.taskService.findOne(createInvoiceDto.taskId);
     }
     
-    // Verify all materials exist and have vendors
+    // Calculate total amount and create invoice items
+    let totalAmount = 0;
+    const invoiceItems = [];
+    
+    // Process each item
     for (const item of createInvoiceDto.items) {
       const material = await this.materialService.findOne(item.materialId);
+      
       if (!material.vendorId) {
         throw new BadRequestException(`Material with ID ${item.materialId} does not have a vendor`);
       }
+
+      // Calculate total for this item using material's quantity
+      const itemTotal = material.quantity * item.unitPrice;
+      totalAmount += itemTotal;
+
+      // Create invoice item
+      const invoiceItem = this.invoiceItemRepository.create({
+        materialId: item.materialId,
+        quantity: material.quantity,
+        unitPrice: item.unitPrice,
+        total: itemTotal
+      });
+      
+      invoiceItems.push(invoiceItem);
     }
     
-    // Create invoice
+    // Create invoice with calculated amount
     const invoice = this.invoiceRepository.create({
-      ...createInvoiceDto,
+      amount: totalAmount,
+      projectId: createInvoiceDto.projectId,
+      taskId: createInvoiceDto.taskId,
       contractorId,
     });
     
     // Save invoice to get ID
     const savedInvoice = await this.invoiceRepository.save(invoice);
     
-    // Create invoice items
-    const invoiceItems = createInvoiceDto.items.map(item => 
-      this.invoiceItemRepository.create({
-        ...item,
-        invoiceId: savedInvoice.id,
-      })
-    );
-    
-    // Save invoice items
+    // Set invoice ID for all items and save them
+    invoiceItems.forEach(item => item.invoiceId = savedInvoice.id);
     savedInvoice.items = await this.invoiceItemRepository.save(invoiceItems);
     
     return this.findOne(savedInvoice.id);

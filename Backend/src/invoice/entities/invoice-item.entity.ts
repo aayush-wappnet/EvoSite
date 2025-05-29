@@ -22,9 +22,6 @@ export class InvoiceItem {
   @Column({ type: 'float' })
   total: number;
 
-  @Column({ nullable: true })
-  description: string;
-
   @CreateDateColumn()
   createdAt: Date;
 

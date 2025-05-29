@@ -62,9 +62,6 @@ class InvoiceItemResponseDto {
 
   @ApiProperty()
   total: number;
-
-  @ApiProperty({ required: false })
-  description?: string;
 }
 
 export class InvoiceResponseDto {
